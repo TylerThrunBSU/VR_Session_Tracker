@@ -1,0 +1,82 @@
+<h2 class="vr-page-title mb-4">STATS DASHBOARD</h2>
+
+<% const totalHours = (stats.totalMinutes / 60).toFixed(1); %>
+
+<!-- Summary cards -->
+<div class="row g-3 mb-5">
+  <div class="col-6 col-md-3">
+    <div class="vr-stat-card">
+      <div class="vr-stat-label">TOTAL SESSIONS</div>
+      <div class="vr-stat-value"><%= stats.total %></div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="vr-stat-card">
+      <div class="vr-stat-label">TOTAL TIME PLAYED</div>
+      <div class="vr-stat-value"><%= totalHours %>h</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="vr-stat-card">
+      <div class="vr-stat-label">AVG DURATION</div>
+      <div class="vr-stat-value"><%= stats.avgDuration %>m</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="vr-stat-card">
+      <div class="vr-stat-label">AVG COMFORT</div>
+      <div class="vr-stat-value"><%= stats.avgComfort || '—' %></div>
+    </div>
+  </div>
+</div>
+
+<% if (stats.total === 0) { %>
+  <div class="vr-empty-state">
+    <i class="bi bi-bar-chart vr-empty-icon"></i>
+    <p class="vr-empty-text">No data yet. Log some sessions to see stats.</p>
+    <a href="/sessions/new" class="btn vr-btn-primary mt-2">LOG A SESSION</a>
+  </div>
+<% } else { %>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="vr-card">
+        <h3 class="vr-card-subtitle mb-3">TOP GAMES BY SESSION COUNT</h3>
+        <% if (stats.topGames.length === 0) { %>
+          <p class="vr-muted">No data.</p>
+        <% } else { %>
+          <table class="table vr-table">
+            <thead><tr><th>GAME NAME</th><th>SESSIONS</th></tr></thead>
+            <tbody>
+              <% stats.topGames.forEach(g => { %>
+                <tr>
+                  <td><%= g.game_name %></td>
+                  <td><%= g.session_count %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="vr-card">
+        <h3 class="vr-card-subtitle mb-3">SESSIONS BY HEADSET</h3>
+        <% if (stats.byHeadset.length === 0) { %>
+          <p class="vr-muted">No data.</p>
+        <% } else { %>
+          <table class="table vr-table">
+            <thead><tr><th>HEADSET</th><th>SESSIONS</th></tr></thead>
+            <tbody>
+              <% stats.byHeadset.forEach(h => { %>
+                <tr>
+                  <td><%= h.headset %></td>
+                  <td><%= h.session_count %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </div>
+<% } %>

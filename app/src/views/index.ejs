@@ -1,14 +1,20 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <div class="text-center mb-5">
-        <h1 class="display-4 text-white mb-3"><%= title %></h1>
-        <p class="text-white-50">GitHub Repository: <a href="https://github.com/shanep/fullstack-starter">https://github.com/shanep/fullstack-starter</a></p>
-        <img src="/images/dependency_2x.png" alt="Fullstack Dependency" class="img-fluid my-4" style="max-width: 200px;">
-        <ul class="list-unstyled text-white-50 mb-4">
-          <li><a href="/lab0.html" class="btn btn-secondary mt-3">Go to Lab 0 Page</a></li>
-        </ul>
+<div class="text-center py-5">
+  <div class="vr-hero mb-4">
+    <h1 class="vr-title">VR SESSION TRACKER</h1>
+    <p class="vr-subtitle">Track your virtual reality sessions and analyze your play history.</p>
+  </div>
+
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-4">
+      <div class="vr-stat-card">
+        <div class="vr-stat-label">TOTAL SESSIONS LOGGED</div>
+        <div class="vr-stat-value"><%= total %></div>
       </div>
     </div>
+  </div>
+
+  <div class="d-flex justify-content-center gap-3">
+    <a href="/sessions/new" class="btn vr-btn-primary">LOG A SESSION</a>
+    <a href="/sessions" class="btn vr-btn-outline">VIEW HISTORY</a>
   </div>
 </div>

@@ -1,0 +1,71 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="vr-card">
+      <h2 class="vr-card-title mb-4">LOG A SESSION</h2>
+
+      <% if (error) { %>
+        <div class="alert vr-alert mb-4"><%= error %></div>
+      <% } %>
+
+      <form action="/sessions" method="POST">
+
+        <div class="vr-form-group mb-4">
+          <label class="vr-label">GAME NAME</label>
+          <input type="text" name="game_name" class="vr-input" placeholder="e.g. Half-Life: Alyx" required />
+        </div>
+
+        <div class="vr-form-group mb-4">
+          <label class="vr-label">HEADSET</label>
+          <select name="headset" class="vr-select" required>
+            <option value="">Select headset...</option>
+            <% headsets.forEach(h => { %>
+              <option value="<%= h %>"><%= h %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="vr-form-group mb-4">
+          <label class="vr-label">DURATION (MINUTES)</label>
+          <input type="number" name="duration_minutes" class="vr-input" min="1" placeholder="e.g. 60" required />
+        </div>
+
+        <div class="vr-form-group mb-4">
+          <label class="vr-label">DATE</label>
+          <input type="date" name="session_date" class="vr-input" value="<%= today %>" required />
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="vr-form-group">
+              <label class="vr-label">COMFORT RATING (1-5)</label>
+              <select name="comfort_rating" class="vr-select">
+                <option value="">Select...</option>
+                <% [1,2,3,4,5].forEach(n => { %><option value="<%= n %>"><%= n %></option><% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="vr-form-group">
+              <label class="vr-label">INTENSITY RATING (1-5)</label>
+              <select name="intensity_rating" class="vr-select">
+                <option value="">Select...</option>
+                <% [1,2,3,4,5].forEach(n => { %><option value="<%= n %>"><%= n %></option><% }) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="vr-form-group mb-5">
+          <label class="vr-label">NOTES</label>
+          <textarea name="notes" class="vr-input vr-textarea" rows="4" placeholder="Anything worth remembering..."></textarea>
+        </div>
+
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn vr-btn-primary">CREATE SESSION</button>
+          <a href="/sessions" class="btn vr-btn-outline">CANCEL</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

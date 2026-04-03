@@ -1,45 +1,373 @@
+/* ── Root variables ── */
+:root {
+  --bg: #0a0e1a;
+  --bg-card: #0f1629;
+  --bg-input: #080c18;
+  --cyan: #00d4ff;
+  --purple: #a855f7;
+  --cyan-dim: rgba(0, 212, 255, 0.15);
+  --purple-dim: rgba(168, 85, 247, 0.15);
+  --text: #e0f0ff;
+  --text-muted: #6b7a99;
+  --danger: #ff4466;
+}
+
+/* ── Base ── */
 body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 20px 0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', Courier, monospace;
 }
 
-a {
-  color: #00B7FF;
+/* ── Navbar ── */
+.vr-navbar {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--cyan);
+  padding: 0.75rem 0;
 }
 
-.card {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.vr-brand {
+  color: var(--cyan) !important;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
 }
 
-.card-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+.vr-nav-link {
+  color: var(--text-muted) !important;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 1rem !important;
+  border: 1px solid transparent;
+  transition: all 0.2s;
 }
 
-.todo-item {
-  border-bottom: 1px solid #e9ecef;
-  padding: 12px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.vr-nav-link:hover,
+.vr-nav-link.active {
+  color: var(--cyan) !important;
+  border-color: var(--cyan);
 }
 
-.todo-item:last-child {
-  border-bottom: none;
+/* ── Footer ── */
+.vr-footer {
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--purple);
 }
 
-.badge-completed {
-  background-color: #28a745;
+.vr-footer-text {
+  color: var(--cyan);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
 }
 
-.badge-pending {
-  background-color: #ffc107;
-  color: #333;
+.vr-footer-sep {
+  color: var(--text-muted);
 }
 
-.btn-delete {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+.vr-footer-sub {
+  color: var(--purple);
+  font-size: 0.75rem;
+}
+
+/* ── Cards ── */
+.vr-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--purple);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+
+.vr-card-title {
+  color: var(--cyan);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--cyan-dim);
+  padding-bottom: 0.75rem;
+}
+
+.vr-card-subtitle {
+  color: var(--purple);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+/* ── Hero / Landing ── */
+.vr-hero {
+  border: 1px solid var(--cyan);
+  padding: 2.5rem;
+  background: var(--bg-card);
+  margin-bottom: 2rem;
+}
+
+.vr-title {
+  color: var(--cyan);
+  font-size: 2.5rem;
+  letter-spacing: 0.12em;
+  font-weight: bold;
+}
+
+.vr-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+.vr-page-title {
+  color: var(--cyan);
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  border-left: 3px solid var(--cyan);
+  padding-left: 0.75rem;
+}
+
+/* ── Stat cards ── */
+.vr-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--purple);
+  border-radius: 4px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.vr-stat-label {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.vr-stat-value {
+  color: var(--purple);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* ── Forms ── */
+.vr-label {
+  display: block;
+  color: var(--cyan);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.vr-input,
+.vr-select {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--purple);
+  border-radius: 3px;
+  color: var(--text);
+  padding: 0.5rem 0.75rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}
+
+.vr-input:focus,
+.vr-select:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan-dim);
+}
+
+.vr-select option {
+  background: var(--bg-card);
+}
+
+.vr-textarea {
+  resize: vertical;
+}
+
+/* ── Buttons ── */
+.vr-btn-primary {
+  background: var(--cyan);
+  color: var(--bg);
+  border: none;
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  font-weight: bold;
+  padding: 0.5rem 1.25rem;
+}
+
+.vr-btn-primary:hover {
+  background: #00b8e0;
+  color: var(--bg);
+}
+
+.vr-btn-outline {
+  background: transparent;
+  color: var(--purple);
+  border: 1px solid var(--purple);
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 1.25rem;
+}
+
+.vr-btn-outline:hover {
+  background: var(--purple-dim);
+  color: var(--purple);
+}
+
+.vr-btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 1.25rem;
+}
+
+.vr-btn-danger:hover {
+  background: rgba(255, 68, 102, 0.15);
+  color: var(--danger);
+}
+
+.vr-btn-sm-outline {
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+}
+
+.vr-btn-sm-outline:hover {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+}
+
+.vr-btn-sm-danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+}
+
+.vr-btn-sm-danger:hover {
+  background: rgba(255, 68, 102, 0.15);
+  color: var(--danger);
+}
+
+/* ── Table ── */
+.vr-table {
+  color: var(--text);
+  font-size: 0.85rem;
+  border-color: var(--purple);
+}
+
+.vr-table thead th {
+  color: var(--bg);
+  background: var(--cyan);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  border: none;
+  padding: 0.6rem 0.75rem;
+}
+
+.vr-table tbody tr {
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.vr-table tbody tr:hover {
+  background: var(--cyan-dim);
+}
+
+.vr-table td {
+  padding: 0.65rem 0.75rem;
+  vertical-align: middle;
+  border: none;
+}
+
+/* ── Stars ── */
+.vr-star {
+  color: var(--cyan);
+  font-size: 0.85rem;
+}
+
+.vr-star-purple {
+  color: var(--purple);
+  font-size: 0.85rem;
+}
+
+/* ── Info blocks (detail page) ── */
+.vr-info-block {
+  background: var(--bg-input);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+}
+
+.vr-info-value {
+  color: var(--cyan);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* ── Empty state ── */
+.vr-empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-muted);
+}
+
+.vr-empty-icon {
+  font-size: 3rem;
+  color: var(--purple);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.vr-empty-text {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ── Alert ── */
+.vr-alert {
+  background: rgba(255, 68, 102, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 3px;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+}
+
+/* ── Back link ── */
+.vr-back-link {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.vr-back-link:hover {
+  color: var(--cyan);
+}
+
+/* ── 404 ── */
+.vr-404-box {
+  border: 1px solid var(--purple);
+  background: var(--bg-card);
+  width: 200px;
+  padding: 1.5rem;
+}
+
+.vr-404-number {
+  color: var(--cyan);
+  font-size: 3.5rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+/* ── Misc ── */
+.vr-muted {
+  color: var(--text-muted);
+  font-size: 0.85rem;
 }

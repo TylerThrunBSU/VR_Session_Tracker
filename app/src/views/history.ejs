@@ -1,0 +1,84 @@
+<h2 class="vr-page-title mb-4">SESSION HISTORY</h2>
+
+<!-- Filters -->
+<div class="vr-card mb-4">
+  <form method="GET" action="/sessions" class="row g-3 align-items-end">
+    <div class="col-md-4">
+      <label class="vr-label">SEARCH GAME NAME</label>
+      <input type="text" name="game" class="vr-input" placeholder="Search..." value="<%= game || '' %>" />
+    </div>
+    <div class="col-md-3">
+      <label class="vr-label">FILTER BY HEADSET</label>
+      <select name="headset" class="vr-select">
+        <option value="">All headsets</option>
+        <% headsets.forEach(h => { %>
+          <option value="<%= h %>" <%= headset === h ? 'selected' : '' %>><%= h %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="vr-label">SORT BY</label>
+      <select name="sort" class="vr-select">
+        <option value="date" <%= sort === 'date' || !sort ? 'selected' : '' %>>Date</option>
+        <option value="duration" <%= sort === 'duration' ? 'selected' : '' %>>Duration</option>
+        <option value="comfort" <%= sort === 'comfort' ? 'selected' : '' %>>Comfort</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn vr-btn-primary w-100">FILTER</button>
+    </div>
+  </form>
+</div>
+
+<% if (sessions.length === 0) { %>
+  <div class="vr-empty-state">
+    <i class="bi bi-controller vr-empty-icon"></i>
+    <p class="vr-empty-text">No sessions found.</p>
+    <a href="/sessions/new" class="btn vr-btn-primary mt-2">LOG YOUR FIRST SESSION</a>
+  </div>
+<% } else { %>
+  <div class="table-responsive">
+    <table class="table vr-table">
+      <thead>
+        <tr>
+          <th>GAME NAME</th>
+          <th>HEADSET</th>
+          <th>DURATION</th>
+          <th>DATE</th>
+          <th>COMFORT</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sessions.forEach(s => { %>
+          <tr>
+            <td><%= s.game_name %></td>
+            <td><%= s.headset %></td>
+            <td><%= s.duration_minutes %> min</td>
+            <td><%= s.session_date %></td>
+            <td>
+              <% if (s.comfort_rating) { %>
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <i class="bi bi-star<%= i <= s.comfort_rating ? '-fill' : '' %> vr-star"></i>
+                <% } %>
+              <% } else { %>
+                <span class="vr-muted">—</span>
+              <% } %>
+            </td>
+            <td>
+              <a href="/sessions/<%= s.id %>" class="btn btn-sm vr-btn-sm-outline me-1">VIEW</a>
+              <form action="/sessions/<%= s.id %>/delete" method="POST" class="d-inline"
+                onsubmit="return confirm('Delete this session?')">
+                <button type="submit" class="btn btn-sm vr-btn-sm-danger">DELETE</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<div class="mt-3">
+  <a href="/sessions/new" class="btn vr-btn-primary">+ LOG SESSION</a>
+</div>

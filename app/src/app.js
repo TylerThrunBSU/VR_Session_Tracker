@@ -8,8 +8,6 @@ const index = require('./routes/index');
 
 const app = express();
 
-//Ensure the data directory exists
-
 const dataDir = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
 const dbFileName = process.env.DB_NAME || 'database.sqlite';
 const dbPath = path.join(dataDir, dbFileName);
@@ -18,7 +16,6 @@ if (!fs.existsSync(dataDir)) {
 }
 const databaseManager = db.createDatabaseManager(dbPath);
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
@@ -26,19 +23,27 @@ app.use(expressLayouts);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// Static files in public directory images, css, js, etc.
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Static html files in the static directory
-// This is for static files that are not using a template engine
 app.use(express.static(path.join(__dirname, 'static')));
 
-// Middleware to attach database to request
-app.use((request, response, next) => {
-  request.db = databaseManager.dbHelpers;
+app.use((req, res, next) => {
+  req.db = databaseManager.dbHelpers;
   next();
 });
+
 app.use('/', index);
 
+// Test helper — clears DB between tests, only active in test environment
+if (process.env.NODE_ENV === 'test') {
+  app.post('/__test/clear', (req, res) => {
+    req.db.clearDatabase();
+    res.sendStatus(200);
+  });
+}
+
+// 404 fallback
+app.use((req, res) => {
+  res.status(404).render('404', { title: '404 - Page Not Found', currentPage: '' });
+});
 
 module.exports = app;
