@@ -1,82 +1,105 @@
-<h2 class="vr-page-title mb-4">STATS DASHBOARD</h2>
+<div class="page-header fade-up">
+  <h1><i class="bi bi-bar-chart-line text-neon me-2" style="font-size:1.3rem;"></i>Stats Dashboard</h1>
+  <p>Your VR activity at a glance.</p>
+</div>
 
 <% const totalHours = (stats.totalMinutes / 60).toFixed(1); %>
 
-<!-- Summary cards -->
-<div class="row g-3 mb-5">
-  <div class="col-6 col-md-3">
-    <div class="vr-stat-card">
-      <div class="vr-stat-label">TOTAL SESSIONS</div>
-      <div class="vr-stat-value"><%= stats.total %></div>
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3 fade-up">
+    <div class="glass-card text-center">
+      <div class="stat-value"><%= stats.total %></div>
+      <div class="stat-label">Total Sessions</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="vr-stat-card">
-      <div class="vr-stat-label">TOTAL TIME PLAYED</div>
-      <div class="vr-stat-value"><%= totalHours %>h</div>
+  <div class="col-6 col-md-3 fade-up">
+    <div class="glass-card text-center">
+      <div class="stat-value"><%= totalHours %>h</div>
+      <div class="stat-label">Time Played</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="vr-stat-card">
-      <div class="vr-stat-label">AVG DURATION</div>
-      <div class="vr-stat-value"><%= stats.avgDuration %>m</div>
+  <div class="col-6 col-md-3 fade-up">
+    <div class="glass-card text-center">
+      <div class="stat-value"><%= stats.avgDuration %>m</div>
+      <div class="stat-label">Avg Duration</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="vr-stat-card">
-      <div class="vr-stat-label">AVG COMFORT</div>
-      <div class="vr-stat-value"><%= stats.avgComfort || '—' %></div>
+  <div class="col-6 col-md-3 fade-up">
+    <div class="glass-card text-center">
+      <div class="stat-value"><%= stats.avgComfort || '—' %></div>
+      <div class="stat-label">Avg Comfort</div>
     </div>
   </div>
 </div>
 
 <% if (stats.total === 0) { %>
-  <div class="vr-empty-state">
-    <i class="bi bi-bar-chart vr-empty-icon"></i>
-    <p class="vr-empty-text">No data yet. Log some sessions to see stats.</p>
-    <a href="/sessions/new" class="btn vr-btn-primary mt-2">LOG A SESSION</a>
+  <div class="glass-card fade-up">
+    <div class="empty-state">
+      <div class="empty-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <h3>No data yet</h3>
+      <p>Log some sessions to see your stats here.</p>
+      <a href="/sessions/new" class="btn btn-neon mt-3">
+        <i class="bi bi-plus-lg me-1"></i> Log a Session
+      </a>
+    </div>
   </div>
 <% } else { %>
   <div class="row g-4">
-    <div class="col-md-6">
-      <div class="vr-card">
-        <h3 class="vr-card-subtitle mb-3">TOP GAMES BY SESSION COUNT</h3>
+
+    <!-- Top Games -->
+    <div class="col-md-6 fade-up">
+      <div class="glass-card-static" style="height:100%;">
+        <h3 style="font-size:1rem; margin-bottom:1.25rem;">
+          <i class="bi bi-controller text-neon me-2"></i>Top Games
+        </h3>
         <% if (stats.topGames.length === 0) { %>
-          <p class="vr-muted">No data.</p>
+          <p class="text-muted-custom">No data.</p>
         <% } else { %>
-          <table class="table vr-table">
-            <thead><tr><th>GAME NAME</th><th>SESSIONS</th></tr></thead>
-            <tbody>
-              <% stats.topGames.forEach(g => { %>
-                <tr>
-                  <td><%= g.game_name %></td>
-                  <td><%= g.session_count %></td>
-                </tr>
-              <% }) %>
-            </tbody>
-          </table>
+          <% const maxCount = Math.max(...stats.topGames.map(g => g.session_count)); %>
+          <% stats.topGames.forEach(function(g) { %>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span style="font-weight:500;"><%= g.game_name %></span>
+                <span class="text-muted-custom" style="font-size:0.85rem;">
+                  <%= g.session_count %> session<%= g.session_count !== 1 ? 's' : '' %>
+                </span>
+              </div>
+              <div class="progress-glass">
+                <div class="progress-fill" style="width: <%= (g.session_count / maxCount * 100) %>%;"></div>
+              </div>
+            </div>
+          <% }); %>
         <% } %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="vr-card">
-        <h3 class="vr-card-subtitle mb-3">SESSIONS BY HEADSET</h3>
+
+    <!-- By Headset -->
+    <div class="col-md-6 fade-up">
+      <div class="glass-card-static" style="height:100%;">
+        <h3 style="font-size:1rem; margin-bottom:1.25rem;">
+          <i class="bi bi-headset text-neon me-2"></i>By Headset
+        </h3>
         <% if (stats.byHeadset.length === 0) { %>
-          <p class="vr-muted">No data.</p>
+          <p class="text-muted-custom">No data.</p>
         <% } else { %>
-          <table class="table vr-table">
-            <thead><tr><th>HEADSET</th><th>SESSIONS</th></tr></thead>
-            <tbody>
-              <% stats.byHeadset.forEach(h => { %>
-                <tr>
-                  <td><%= h.headset %></td>
-                  <td><%= h.session_count %></td>
-                </tr>
-              <% }) %>
-            </tbody>
-          </table>
+          <% const maxH = Math.max(...stats.byHeadset.map(h => h.session_count)); %>
+          <% stats.byHeadset.forEach(function(h) { %>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span style="font-weight:500;"><%= h.headset %></span>
+                <span class="text-muted-custom" style="font-size:0.85rem;">
+                  <%= h.session_count %> session<%= h.session_count !== 1 ? 's' : '' %>
+                </span>
+              </div>
+              <div class="progress-glass">
+                <div class="progress-fill" style="width: <%= (h.session_count / maxH * 100) %>%;"></div>
+              </div>
+            </div>
+          <% }); %>
         <% } %>
       </div>
     </div>
+
   </div>
 <% } %>

@@ -1,22 +1,26 @@
 <div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="vr-card">
-      <h2 class="vr-card-title mb-4">LOG A SESSION</h2>
+  <div class="col-md-8 col-lg-7">
+    <div class="page-header fade-up">
+      <h1><i class="bi bi-plus-circle text-neon me-2" style="font-size:1.3rem;"></i>Log a Session</h1>
+      <p>Record a new VR session.</p>
+    </div>
 
+    <div class="glass-card-static fade-up">
       <% if (error) { %>
-        <div class="alert vr-alert mb-4"><%= error %></div>
+        <div class="alert-glass mb-4"><i class="bi bi-exclamation-triangle me-2"></i><%= error %></div>
       <% } %>
 
       <form action="/sessions" method="POST">
 
-        <div class="vr-form-group mb-4">
-          <label class="vr-label">GAME NAME</label>
-          <input type="text" name="game_name" class="vr-input" placeholder="e.g. Half-Life: Alyx" required />
+        <div class="mb-3">
+          <label class="form-label-glow" for="game_name">Game Name</label>
+          <input type="text" class="form-control form-control-glass" id="game_name" name="game_name"
+                 placeholder="e.g. Half-Life: Alyx" required>
         </div>
 
-        <div class="vr-form-group mb-4">
-          <label class="vr-label">HEADSET</label>
-          <select name="headset" class="vr-select" required>
+        <div class="mb-3">
+          <label class="form-label-glow" for="headset">Headset</label>
+          <select class="form-select form-select-glass" id="headset" name="headset" required>
             <option value="">Select headset...</option>
             <% headsets.forEach(h => { %>
               <option value="<%= h %>"><%= h %></option>
@@ -24,45 +28,51 @@
           </select>
         </div>
 
-        <div class="vr-form-group mb-4">
-          <label class="vr-label">DURATION (MINUTES)</label>
-          <input type="number" name="duration_minutes" class="vr-input" min="1" placeholder="e.g. 60" required />
-        </div>
-
-        <div class="vr-form-group mb-4">
-          <label class="vr-label">DATE</label>
-          <input type="date" name="session_date" class="vr-input" value="<%= today %>" required />
-        </div>
-
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="vr-form-group">
-              <label class="vr-label">COMFORT RATING (1-5)</label>
-              <select name="comfort_rating" class="vr-select">
-                <option value="">Select...</option>
-                <% [1,2,3,4,5].forEach(n => { %><option value="<%= n %>"><%= n %></option><% }) %>
-              </select>
-            </div>
+        <div class="row g-3 mb-3">
+          <div class="col-sm-6">
+            <label class="form-label-glow" for="duration_minutes">Duration (minutes)</label>
+            <input type="number" class="form-control form-control-glass" id="duration_minutes" name="duration_minutes"
+                   min="1" placeholder="e.g. 60" required>
           </div>
-          <div class="col-md-6">
-            <div class="vr-form-group">
-              <label class="vr-label">INTENSITY RATING (1-5)</label>
-              <select name="intensity_rating" class="vr-select">
-                <option value="">Select...</option>
-                <% [1,2,3,4,5].forEach(n => { %><option value="<%= n %>"><%= n %></option><% }) %>
-              </select>
-            </div>
+          <div class="col-sm-6">
+            <label class="form-label-glow" for="session_date">Date</label>
+            <input type="date" class="form-control form-control-glass" id="session_date" name="session_date"
+                   value="<%= today %>" required>
           </div>
         </div>
 
-        <div class="vr-form-group mb-5">
-          <label class="vr-label">NOTES</label>
-          <textarea name="notes" class="vr-input vr-textarea" rows="4" placeholder="Anything worth remembering..."></textarea>
+        <div class="row g-3 mb-3">
+          <div class="col-sm-6">
+            <label class="form-label-glow">Comfort Rating</label>
+            <div class="d-flex gap-1 mt-1 star-interactive" id="comfortGroup">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="bi bi-star vr-star-muted" data-index="<%= i %>"></i>
+              <% } %>
+              <input type="hidden" name="comfort_rating" id="comfort_rating" value="">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-glow">Intensity Rating</label>
+            <div class="d-flex gap-1 mt-1 star-interactive" id="intensityGroup">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="bi bi-star vr-star-muted" data-index="<%= i %>"></i>
+              <% } %>
+              <input type="hidden" name="intensity_rating" id="intensity_rating" value="">
+            </div>
+          </div>
         </div>
 
-        <div class="d-flex gap-3">
-          <button type="submit" class="btn vr-btn-primary">CREATE SESSION</button>
-          <a href="/sessions" class="btn vr-btn-outline">CANCEL</a>
+        <div class="mb-4">
+          <label class="form-label-glow" for="notes">Notes</label>
+          <textarea class="form-control form-control-glass" id="notes" name="notes" rows="4"
+                    placeholder="Anything worth remembering..."></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-neon flex-grow-1">
+            <i class="bi bi-check-lg me-1"></i> Create Session
+          </button>
+          <a href="/sessions" class="btn btn-outline-neon">Cancel</a>
         </div>
 
       </form>

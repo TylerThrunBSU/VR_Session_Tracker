@@ -1,84 +1,104 @@
-<h2 class="vr-page-title mb-4">SESSION HISTORY</h2>
-
-<!-- Filters -->
-<div class="vr-card mb-4">
-  <form method="GET" action="/sessions" class="row g-3 align-items-end">
-    <div class="col-md-4">
-      <label class="vr-label">SEARCH GAME NAME</label>
-      <input type="text" name="game" class="vr-input" placeholder="Search..." value="<%= game || '' %>" />
+<div class="page-header fade-up">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <div>
+      <h1><i class="bi bi-clock-history text-neon me-2" style="font-size:1.3rem;"></i>Session History</h1>
+      <p><%= sessions.length %> session<%= sessions.length !== 1 ? 's' : '' %> logged</p>
     </div>
-    <div class="col-md-3">
-      <label class="vr-label">FILTER BY HEADSET</label>
-      <select name="headset" class="vr-select">
+    <a href="/sessions/new" class="btn btn-neon btn-sm">
+      <i class="bi bi-plus-lg me-1"></i> Log Session
+    </a>
+  </div>
+</div>
+
+<!-- Filter / Sort Bar -->
+<div class="glass-card-static mb-4 fade-up" style="padding: 1rem 1.25rem;">
+  <form method="GET" action="/sessions" class="row g-2 align-items-end">
+    <div class="col-sm-4 col-md-3">
+      <label class="form-label-glow">Search Game</label>
+      <input type="text" name="game" class="form-control form-control-glass" placeholder="Search..." value="<%= game || '' %>">
+    </div>
+    <div class="col-sm-4 col-md-3">
+      <label class="form-label-glow">Headset</label>
+      <select name="headset" class="form-select form-select-glass">
         <option value="">All headsets</option>
         <% headsets.forEach(h => { %>
           <option value="<%= h %>" <%= headset === h ? 'selected' : '' %>><%= h %></option>
         <% }) %>
       </select>
     </div>
-    <div class="col-md-3">
-      <label class="vr-label">SORT BY</label>
-      <select name="sort" class="vr-select">
+    <div class="col-sm-4 col-md-3">
+      <label class="form-label-glow">Sort By</label>
+      <select name="sort" class="form-select form-select-glass">
         <option value="date" <%= sort === 'date' || !sort ? 'selected' : '' %>>Date</option>
         <option value="duration" <%= sort === 'duration' ? 'selected' : '' %>>Duration</option>
         <option value="comfort" <%= sort === 'comfort' ? 'selected' : '' %>>Comfort</option>
       </select>
     </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn vr-btn-primary w-100">FILTER</button>
+    <div class="col-md-3 d-flex gap-2">
+      <button type="submit" class="btn btn-neon btn-sm flex-grow-1">Filter</button>
+      <% if (game || headset || (sort && sort !== 'date')) { %>
+        <a href="/sessions" class="btn btn-outline-neon btn-sm">Clear</a>
+      <% } %>
     </div>
   </form>
 </div>
 
 <% if (sessions.length === 0) { %>
-  <div class="vr-empty-state">
-    <i class="bi bi-controller vr-empty-icon"></i>
-    <p class="vr-empty-text">No sessions found.</p>
-    <a href="/sessions/new" class="btn vr-btn-primary mt-2">LOG YOUR FIRST SESSION</a>
+  <div class="glass-card fade-up">
+    <div class="empty-state">
+      <div class="empty-icon"><i class="bi bi-controller"></i></div>
+      <% if (game || headset) { %>
+        <h3>No sessions match your filters</h3>
+        <p>Try adjusting your filters or clear them.</p>
+        <a href="/sessions" class="btn btn-outline-neon mt-3">Clear Filters</a>
+      <% } else { %>
+        <h3>No sessions yet</h3>
+        <p>Log your first VR session to start tracking.</p>
+        <a href="/sessions/new" class="btn btn-neon mt-3">
+          <i class="bi bi-plus-lg me-1"></i> Log First Session
+        </a>
+      <% } %>
+    </div>
   </div>
 <% } else { %>
-  <div class="table-responsive">
-    <table class="table vr-table">
-      <thead>
-        <tr>
-          <th>GAME NAME</th>
-          <th>HEADSET</th>
-          <th>DURATION</th>
-          <th>DATE</th>
-          <th>COMFORT</th>
-          <th>ACTIONS</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% sessions.forEach(s => { %>
-          <tr>
-            <td><%= s.game_name %></td>
-            <td><%= s.headset %></td>
-            <td><%= s.duration_minutes %> min</td>
-            <td><%= s.session_date %></td>
-            <td>
+  <!-- Session Cards -->
+  <div class="row g-3">
+    <% sessions.forEach(function(s) { %>
+    <div class="col-12 fade-up">
+      <a href="/sessions/<%= s.id %>" style="text-decoration:none; color:inherit;">
+        <div class="glass-card d-flex align-items-center gap-3">
+          <div class="d-none d-sm-flex align-items-center justify-content-center"
+               style="width:48px; height:48px; border-radius:12px; background:rgba(0,212,255,0.08); flex-shrink:0;">
+            <i class="bi bi-controller text-neon" style="font-size:1.2rem;"></i>
+          </div>
+          <div class="flex-grow-1 min-width-0">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 style="font-size:1rem; font-family:'Outfit'; font-weight:600; margin:0;">
+                <%= s.game_name %>
+              </h5>
+              <small class="text-muted-custom"><%= s.session_date %></small>
+            </div>
+            <div class="d-flex gap-2 mt-1 flex-wrap align-items-center">
+              <span class="badge-neon"><%= s.duration_minutes %> min</span>
+              <span class="badge-neon"><%= s.headset %></span>
               <% if (s.comfort_rating) { %>
-                <% for (let i = 1; i <= 5; i++) { %>
-                  <i class="bi bi-star<%= i <= s.comfort_rating ? '-fill' : '' %> vr-star"></i>
-                <% } %>
-              <% } else { %>
-                <span class="vr-muted">—</span>
+                <span>
+                  <% for (let i = 1; i <= 5; i++) { %>
+                    <i class="bi bi-star<%= i <= s.comfort_rating ? '-fill' : '' %> vr-star" style="font-size:0.7rem;"></i>
+                  <% } %>
+                </span>
               <% } %>
-            </td>
-            <td>
-              <a href="/sessions/<%= s.id %>" class="btn btn-sm vr-btn-sm-outline me-1">VIEW</a>
-              <form action="/sessions/<%= s.id %>/delete" method="POST" class="d-inline"
-                onsubmit="return confirm('Delete this session?')">
-                <button type="submit" class="btn btn-sm vr-btn-sm-danger">DELETE</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+            </div>
+            <% if (s.notes) { %>
+              <p class="text-muted-custom mb-0 mt-1" style="font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <%= s.notes %>
+              </p>
+            <% } %>
+          </div>
+          <i class="bi bi-chevron-right text-muted-custom d-none d-sm-block"></i>
+        </div>
+      </a>
+    </div>
+    <% }); %>
   </div>
 <% } %>
-
-<div class="mt-3">
-  <a href="/sessions/new" class="btn vr-btn-primary">+ LOG SESSION</a>
-</div>

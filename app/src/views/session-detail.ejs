@@ -1,111 +1,107 @@
 <div class="row justify-content-center">
-  <div class="col-md-8">
+  <div class="col-md-8 col-lg-7">
 
-    <div class="d-flex align-items-center mb-4 gap-3">
-      <a href="/sessions" class="vr-back-link"><i class="bi bi-arrow-left"></i> History</a>
-      <h2 class="vr-page-title mb-0">SESSION DETAIL #<%= session.id %></h2>
+    <div class="fade-up mb-3" style="padding-top:1rem;">
+      <a href="/sessions" class="back-link"><i class="bi bi-arrow-left me-1"></i> Back to History</a>
     </div>
 
-    <!-- Read-only info -->
-    <div class="vr-card mb-4">
-      <h3 class="vr-card-subtitle mb-3">SESSION INFORMATION</h3>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <div class="vr-info-block">
-            <div class="vr-label">GAME NAME</div>
-            <div class="vr-info-value"><%= session.game_name %></div>
-          </div>
+    <!-- Session Info -->
+    <div class="glass-card-static fade-up mb-4">
+      <div class="d-flex justify-content-between align-items-start mb-1">
+        <h1 style="font-size:1.5rem; margin-bottom:0.25rem;"><%= session.game_name %></h1>
+        <span class="badge-neon"><%= session.headset %></span>
+      </div>
+      <span class="text-muted-custom" style="font-size:0.9rem;"><%= session.session_date %></span>
+
+      <hr class="divider">
+
+      <div class="row g-4">
+        <div class="col-sm-4 text-center">
+          <div class="stat-value" style="font-size:1.6rem;"><%= session.duration_minutes %></div>
+          <div class="stat-label">Minutes</div>
         </div>
-        <div class="col-md-6">
-          <div class="vr-info-block">
-            <div class="vr-label">HEADSET</div>
-            <div class="vr-info-value"><%= session.headset %></div>
+        <div class="col-sm-4 text-center">
+          <div style="font-size:1.2rem; margin-bottom:0.3rem;">
+            <% if (session.comfort_rating) { %>
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="bi bi-star<%= i <= session.comfort_rating ? '-fill' : '' %> vr-star"></i>
+              <% } %>
+            <% } else { %>
+              <span class="text-muted-custom" style="font-size:0.85rem;">Not rated</span>
+            <% } %>
           </div>
+          <div class="stat-label">Comfort</div>
         </div>
-        <div class="col-md-6">
-          <div class="vr-info-block">
-            <div class="vr-label">DURATION</div>
-            <div class="vr-info-value"><%= session.duration_minutes %> minutes</div>
+        <div class="col-sm-4 text-center">
+          <div style="font-size:1.2rem; margin-bottom:0.3rem;">
+            <% if (session.intensity_rating) { %>
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="bi bi-star<%= i <= session.intensity_rating ? '-fill' : '' %> vr-star-purple"></i>
+              <% } %>
+            <% } else { %>
+              <span class="text-muted-custom" style="font-size:0.85rem;">Not rated</span>
+            <% } %>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="vr-info-block">
-            <div class="vr-label">DATE</div>
-            <div class="vr-info-value"><%= session.session_date %></div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="vr-info-block">
-            <div class="vr-label">COMFORT RATING</div>
-            <div class="vr-info-value">
-              <% if (session.comfort_rating) { %>
-                <% for (let i = 1; i <= 5; i++) { %>
-                  <i class="bi bi-star<%= i <= session.comfort_rating ? '-fill' : '' %> vr-star"></i>
-                <% } %>
-                (<%= session.comfort_rating %>/5)
-              <% } else { %><span class="vr-muted">Not rated</span><% } %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="vr-info-block">
-            <div class="vr-label">INTENSITY RATING</div>
-            <div class="vr-info-value">
-              <% if (session.intensity_rating) { %>
-                <% for (let i = 1; i <= 5; i++) { %>
-                  <i class="bi bi-star<%= i <= session.intensity_rating ? '-fill' : '' %> vr-star-purple"></i>
-                <% } %>
-                (<%= session.intensity_rating %>/5)
-              <% } else { %><span class="vr-muted">Not rated</span><% } %>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="vr-info-block">
-            <div class="vr-label">NOTES</div>
-            <div class="vr-info-value"><%= session.notes || '—' %></div>
-          </div>
+          <div class="stat-label">Intensity</div>
         </div>
       </div>
+
+      <% if (session.notes) { %>
+        <hr class="divider">
+        <div>
+          <div class="form-label-glow mb-2">Notes</div>
+          <p style="line-height:1.65; margin:0;"><%= session.notes %></p>
+        </div>
+      <% } %>
     </div>
 
-    <!-- Edit form -->
-    <div class="vr-card mb-4">
-      <h3 class="vr-card-subtitle mb-3">EDIT SESSION</h3>
+    <!-- Edit Form -->
+    <div class="glass-card-static fade-up mb-4">
+      <h3 style="font-size:1rem; margin-bottom:1rem;">
+        <i class="bi bi-pencil text-neon me-2"></i>Edit Session
+      </h3>
       <form action="/sessions/<%= session.id %>/update" method="POST">
-        <div class="row g-3 mb-4">
-          <div class="col-md-6">
-            <label class="vr-label">COMFORT RATING</label>
-            <select name="comfort_rating" class="vr-select">
-              <option value="">—</option>
-              <% [1,2,3,4,5].forEach(n => { %>
-                <option value="<%= n %>" <%= session.comfort_rating == n ? 'selected' : '' %>><%= n %></option>
-              <% }) %>
-            </select>
+        <div class="row g-3 mb-3">
+          <div class="col-sm-6">
+            <label class="form-label-glow">Comfort Rating</label>
+            <div class="d-flex gap-1 mt-1 star-interactive" id="editComfortGroup">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="bi bi-star<%= session.comfort_rating && i <= session.comfort_rating ? '-fill vr-star' : ' vr-star-muted' %>"
+                   data-index="<%= i %>"></i>
+              <% } %>
+              <input type="hidden" name="comfort_rating" id="edit_comfort_rating" value="<%= session.comfort_rating || '' %>">
+            </div>
           </div>
-          <div class="col-md-6">
-            <label class="vr-label">INTENSITY RATING</label>
-            <select name="intensity_rating" class="vr-select">
-              <option value="">—</option>
-              <% [1,2,3,4,5].forEach(n => { %>
-                <option value="<%= n %>" <%= session.intensity_rating == n ? 'selected' : '' %>><%= n %></option>
-              <% }) %>
-            </select>
-          </div>
-          <div class="col-12">
-            <label class="vr-label">NOTES</label>
-            <textarea name="notes" class="vr-input vr-textarea" rows="4"><%= session.notes || '' %></textarea>
+          <div class="col-sm-6">
+            <label class="form-label-glow">Intensity Rating</label>
+            <div class="d-flex gap-1 mt-1 star-interactive" id="editIntensityGroup">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="bi bi-star<%= session.intensity_rating && i <= session.intensity_rating ? '-fill vr-star-purple' : ' vr-star-muted' %>"
+                   data-index="<%= i %>"></i>
+              <% } %>
+              <input type="hidden" name="intensity_rating" id="edit_intensity_rating" value="<%= session.intensity_rating || '' %>">
+            </div>
           </div>
         </div>
-        <button type="submit" class="btn vr-btn-primary">SAVE CHANGES</button>
+        <div class="mb-3">
+          <label class="form-label-glow">Notes</label>
+          <textarea name="notes" class="form-control form-control-glass" rows="4"><%= session.notes || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-neon">
+          <i class="bi bi-check-lg me-1"></i> Save Changes
+        </button>
       </form>
     </div>
 
     <!-- Delete -->
-    <form action="/sessions/<%= session.id %>/delete" method="POST"
-      onsubmit="return confirm('Delete this session permanently?')">
-      <button type="submit" class="btn vr-btn-danger">DELETE SESSION</button>
-    </form>
+    <div class="fade-up">
+      <form action="/sessions/<%= session.id %>/delete" method="POST"
+            onsubmit="return confirm('Delete this session permanently?');">
+        <button type="submit" class="btn btn-danger-glass">
+          <i class="bi bi-trash3 me-1"></i> Delete Session
+        </button>
+      </form>
+    </div>
 
   </div>
 </div>
