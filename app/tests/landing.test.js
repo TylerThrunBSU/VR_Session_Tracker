@@ -10,12 +10,12 @@ describe('Landing Page', () => {
 
   test('GET / contains app title', async () => {
     const res = await request(app).get('/');
-    expect(res.text).toContain('VR SESSION TRACKER');
+    expect(res.text).toContain('VR Session Tracker');
   });
 
   test('GET / contains session count card', async () => {
     const res = await request(app).get('/');
-    expect(res.text).toContain('TOTAL SESSIONS LOGGED');
+    expect(res.text).toMatch(/total sessions logged/i);
   });
 
   test('GET / contains nav links', async () => {

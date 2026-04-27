@@ -8,7 +8,10 @@ const index = require('./routes/index');
 
 const app = express();
 
-const dataDir = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const defaultDataDir = process.env.NODE_ENV === 'test'
+  ? path.join(__dirname, '..', 'test-data')
+  : path.join(__dirname, '..', 'data');
+const dataDir = process.env.DATA_DIR || defaultDataDir;
 const dbFileName = process.env.DB_NAME || 'database.sqlite';
 const dbPath = path.join(dataDir, dbFileName);
 if (!fs.existsSync(dataDir)) {

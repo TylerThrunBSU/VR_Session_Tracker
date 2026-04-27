@@ -7,7 +7,7 @@
     "start:prod": "NODE_ENV=production node ./src/bin/www",
     "debug": "node --inspect ./src/bin/www",
     "clean": "rm -rf ./data ./src/data ./node_modules ./test-data",
-    "test": "cross-env NODE_ENV=test jest --forceExit"
+    "test": "cross-env NODE_ENV=test jest --runInBand --forceExit"
   },
   "dependencies": {
     "better-sqlite3": "^12.5.0",

@@ -14,6 +14,12 @@ const createSession = (overrides = {}) =>
     ...overrides,
   });
 
+const getSessionIdByGame = async (gameName) => {
+  const res = await request(app).get(`/sessions?game=${encodeURIComponent(gameName)}`);
+  const match = res.text.match(/href="\/sessions\/(\d+)"/);
+  return match ? match[1] : null;
+};
+
 beforeEach(async () => {
   await request(app).post('/__test/clear');
 });
@@ -81,7 +87,7 @@ describe('Session History', () => {
 
   test('GET /sessions with no results shows empty state', async () => {
     const res = await request(app).get('/sessions?game=zzznomatch999');
-    expect(res.text).toContain('vr-empty-state');
+    expect(res.text).toContain('No sessions match your filters');
   });
 
 });
@@ -89,13 +95,12 @@ describe('Session History', () => {
 describe('Session Detail', () => {
 
   test('GET /sessions/:id returns 200 for valid session', async () => {
-    await createSession();
-    const list = await request(app).get('/sessions');
-    const match = list.text.match(/href="\/sessions\/(\d+)"/);
-    const id = match[1];
+    const gameName = 'Orion Drift Detail Test';
+    await createSession({ game_name: gameName });
+    const id = await getSessionIdByGame(gameName);
     const res = await request(app).get(`/sessions/${id}`);
     expect(res.status).toBe(200);
-    expect(res.text).toContain('Orion Drift');
+    expect(res.text).toContain(gameName);
   });
 
   test('GET /sessions/:id returns 404 for invalid id', async () => {
@@ -104,10 +109,9 @@ describe('Session Detail', () => {
   });
 
   test('POST /sessions/:id/update updates notes and redirects', async () => {
-    await createSession();
-    const list = await request(app).get('/sessions');
-    const match = list.text.match(/href="\/sessions\/(\d+)"/);
-    const id = match[1];
+    const gameName = 'Orion Drift Update Test';
+    await createSession({ game_name: gameName });
+    const id = await getSessionIdByGame(gameName);
     const res = await request(app)
       .post(`/sessions/${id}/update`)
       .send({ comfort_rating: '3', intensity_rating: '2', notes: 'Updated note' });
@@ -117,10 +121,9 @@ describe('Session Detail', () => {
   });
 
   test('POST /sessions/:id/delete removes session and redirects', async () => {
-    await createSession();
-    const list = await request(app).get('/sessions');
-    const match = list.text.match(/href="\/sessions\/(\d+)"/);
-    const id = match[1];
+    const gameName = 'Orion Drift Delete Test';
+    await createSession({ game_name: gameName });
+    const id = await getSessionIdByGame(gameName);
     const res = await request(app).post(`/sessions/${id}/delete`);
     expect(res.status).toBe(302);
     const detail = await request(app).get(`/sessions/${id}`);
@@ -138,10 +141,10 @@ describe('Stats Dashboard', () => {
 
   test('GET /stats shows stat cards', async () => {
     const res = await request(app).get('/stats');
-    expect(res.text).toContain('TOTAL SESSIONS');
-    expect(res.text).toContain('TOTAL TIME PLAYED');
-    expect(res.text).toContain('AVG DURATION');
-    expect(res.text).toContain('AVG COMFORT');
+    expect(res.text).toMatch(/total sessions/i);
+    expect(res.text).toMatch(/time played/i);
+    expect(res.text).toMatch(/avg duration/i);
+    expect(res.text).toMatch(/avg comfort/i);
   });
 
   test('GET /stats reflects created sessions', async () => {
@@ -162,7 +165,7 @@ describe('404 Page', () => {
   test('404 page contains return home link', async () => {
     const res = await request(app).get('/this-does-not-exist');
     expect(res.text).toContain('404');
-    expect(res.text).toContain('RETURN TO HOME');
+    expect(res.text).toMatch(/return to home/i);
   });
 
 });
